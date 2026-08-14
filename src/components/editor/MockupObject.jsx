@@ -1,4 +1,5 @@
 import { useLoader } from "@react-three/fiber";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { useEditorStore } from "../../store/editorStore.js";
@@ -28,39 +29,27 @@ function TexturedArtwork({ args, position, rotation, url }) {
 }
 
 function PhoneMockup() {
+  // Replace with your actual 3D model path
+  // Place your phone.glb file in /workspace/public/models/phone.glb
+  const gltf = useLoader(GLTFLoader, "/models/phone.glb");
+  
   return (
     <group rotation={[0, -0.2, 0]} position={[0, 0.05, 0]}>
-      <mesh castShadow receiveShadow>
-        <boxGeometry args={[1.55, 3.1, 0.18]} />
-        <meshStandardMaterial color="#16171a" metalness={0.72} roughness={0.34} />
-      </mesh>
+      <primitive object={gltf.scene} />
       <ArtworkPlane args={[1.34, 2.72]} position={[0, 0, 0.096]} />
-      <mesh position={[0.38, 1.22, 0.2]} castShadow>
-        <boxGeometry args={[0.42, 0.42, 0.08]} />
-        <meshStandardMaterial color="#0c0d0f" metalness={0.6} roughness={0.28} />
-      </mesh>
     </group>
   );
 }
 
 function LaptopMockup() {
+  // Replace with your actual 3D model path
+  // Place your laptop.glb file in /workspace/public/models/laptop.glb
+  const gltf = useLoader(GLTFLoader, "/models/laptop.glb");
+  
   return (
     <group position={[0, -0.4, 0]} rotation={[0, -0.35, 0]}>
-      <mesh castShadow receiveShadow position={[0, -0.55, 0.15]}>
-        <boxGeometry args={[3.8, 0.18, 2.25]} />
-        <meshStandardMaterial color="#b9bec6" metalness={0.55} roughness={0.28} />
-      </mesh>
-      <group position={[0, 0.55, -0.88]} rotation={[-0.28, 0, 0]}>
-        <mesh castShadow receiveShadow>
-          <boxGeometry args={[3.5, 2.15, 0.12]} />
-          <meshStandardMaterial color="#202226" metalness={0.45} roughness={0.35} />
-        </mesh>
-        <ArtworkPlane args={[3.18, 1.78]} position={[0, 0, 0.071]} rotation={[0, 0, 0]} />
-      </group>
-      <mesh position={[0, -0.44, 0.35]}>
-        <boxGeometry args={[2.3, 0.025, 1.05]} />
-        <meshStandardMaterial color="#7e858e" roughness={0.55} />
-      </mesh>
+      <primitive object={gltf.scene} />
+      <ArtworkPlane args={[3.18, 1.78]} position={[0, 0.55, -0.809]} rotation={[-0.28, 0, 0]} />
     </group>
   );
 }
