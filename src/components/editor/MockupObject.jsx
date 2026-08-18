@@ -1,18 +1,18 @@
 import { useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useEditorStore } from "../../store/editorStore.js";
 import { configureArtworkTexture } from "../../utils/textureUtils.js";
 
-function ArtworkPlane({ args, position, rotation = [0, 0, 0] }) {
+function ArtworkPlane({ args, position, rotation = [0, 0, 0], scale = [1, 1, 1] }) {
   const uploadedImage = useEditorStore((state) => state.uploadedImage);
-
+  
   if (!uploadedImage) return null;
-  return <TexturedArtwork args={args} position={position} rotation={rotation} url={uploadedImage.url} />;
+  return <TexturedArtwork args={args} position={position} rotation={rotation} scale={scale} url={uploadedImage.url} />;
 }
 
-function TexturedArtwork({ args, position, rotation, url }) {
+function TexturedArtwork({ args, position, rotation, scale, url }) {
   const imageTransform = useEditorStore((state) => state.imageTransform);
   const texture = useLoader(THREE.TextureLoader, url);
 
@@ -21,7 +21,7 @@ function TexturedArtwork({ args, position, rotation, url }) {
   }, [texture, imageTransform]);
 
   return (
-    <mesh position={position} rotation={rotation}>
+    <mesh position={position} rotation={rotation} scale={scale}>
       <planeGeometry args={args} />
       <meshStandardMaterial map={texture} roughness={0.42} metalness={0.02} toneMapped={false} />
     </mesh>
@@ -29,10 +29,18 @@ function TexturedArtwork({ args, position, rotation, url }) {
 }
 
 function PhoneMockup() {
-  // Replace with your actual 3D model path
-  // Place your phone.glb file in /workspace/public/models/phone.glb
   const gltf = useLoader(GLTFLoader, "/models/phone.glb");
   
+  useEffect(() => {
+    if (gltf && gltf.scene) {
+      gltf.scene.traverse((child) => {
+        if (child.isMesh && child.name.toLowerCase().includes("screen")) {
+          child.visible = false;
+        }
+      });
+    }
+  }, [gltf]);
+
   return (
     <group rotation={[0, -0.2, 0]} position={[0, 0.05, 0]}>
       <primitive object={gltf.scene} />
@@ -42,10 +50,18 @@ function PhoneMockup() {
 }
 
 function LaptopMockup() {
-  // Replace with your actual 3D model path
-  // Place your laptop.glb file in /workspace/public/models/laptop.glb
   const gltf = useLoader(GLTFLoader, "/models/laptop.glb");
   
+  useEffect(() => {
+    if (gltf && gltf.scene) {
+      gltf.scene.traverse((child) => {
+        if (child.isMesh && child.name.toLowerCase().includes("screen")) {
+          child.visible = false;
+        }
+      });
+    }
+  }, [gltf]);
+
   return (
     <group position={[0, -0.4, 0]} rotation={[0, -0.35, 0]}>
       <primitive object={gltf.scene} />
